@@ -62,24 +62,16 @@ bool valid_area (size_t start, size_t len)
 	assert (node->start <= start);
 	/* Speicherbereich an Adresse 0 oder nicht an einer 8 Byte Kante. */
 	my_assert (start, "Speicherbereich an Adresse 0");
-	my_assert (start % 8 == 0 && len % 8 == 0,
-		"Speicherbereich nicht an einer 8 Byte Kante");
+	my_assert (start % 8 == 0 && len % 8 == 0, "Speicherbereich nicht an einer 8 Byte Kante");
 	if (node->start + node->len < start + len)
 		for (size_t n=start; n < start+len; n+=8)
-			my_assert(find_avl(blocks, n),
-				"Speicherbereich ragt in eine Region, "
-				"die nicht mit get_block_from_system "
-				"angefordert wurde");
+			my_assert(find_avl(blocks, n), "Speicherbereich ragt in eine Region, die nicht mit get_block_from_system angfordert wurde");
 	return true;
 }
 
 #define HEIGHT_LEFT(N)  (((N)->left)?((N)->left->height):0)
 #define HEIGHT_RIGHT(N) (((N)->right)?((N)->right->height):0)
-#define GETHEIGHT(N) \
-	((HEIGHT_LEFT(N)>HEIGHT_RIGHT(N))? \
-		(1+HEIGHT_LEFT(N)) \
-	: \
-		(1+HEIGHT_RIGHT(N)))
+#define GETHEIGHT(N) ((HEIGHT_LEFT(N)>HEIGHT_RIGHT(N))?(1+HEIGHT_LEFT(N)):(1+HEIGHT_RIGHT(N)))
 
 static void rebalance1 (struct avl_node ** root, struct avl_node * n)
 {
@@ -245,12 +237,10 @@ void insert_avl (struct avl_node ** root, size_t start, size_t len)
 	struct avl_node * next = prev->next;
 	struct avl_node * n;
 	/* Ueberlappende Speicherbereiche! */
-	my_assert (prev->start + prev->len <= start,
-		"Ueberlappende Speicherbereiche");
+	my_assert (prev->start + prev->len <= start, "Ueberlappende Speicherbereiche");
 	if (next) {
 		/* Ueberlappende Speicherbereiche */
-		my_assert (next->start >= start + len,
-			"Ueberlappende Speicherbereiche");
+		my_assert (next->start >= start + len, "Ueberlappende Speicherbereiche");
 	}
 	n = malloc (sizeof (struct avl_node));
 	assert (n);
